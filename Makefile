@@ -31,8 +31,8 @@ clean:
 dist: clean
 	@echo creating dist tarball
 	@mkdir -p utmp-${VERSION}
-	@cp -R LICENSE Makefile config.mk utmp.1 ${SRC} st-${VERSION}
-	@tar -cf utmp-${VERSION}.tar st-${VERSION}
+	@cp -R LICENSE Makefile config.mk utmp.1 ${SRC} utmp-${VERSION}
+	@tar -cf utmp-${VERSION}.tar utmp-${VERSION}
 	@gzip utmp-${VERSION}.tar
 	@rm -rf utmp-${VERSION}
 
