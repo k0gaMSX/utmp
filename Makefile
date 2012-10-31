@@ -41,8 +41,8 @@ install: all
 	@mkdir -p ${DESTDIR}${PREFIX}/bin
 	@cp -f utmp ${DESTDIR}${PREFIX}/bin
 	@chmod 755 ${DESTDIR}${PREFIX}/bin/utmp
-	@chmod g+s ${DESTDIR}${PREFIX}/bin/utmp
 	@chgrp ${GROUP} ${DESTDIR}${PREFIX}/bin/utmp
+	@chmod g+s ${DESTDIR}${PREFIX}/bin/utmp
 	@echo installing manual page to ${DESTDIR}${PREFIX}/man1
 	@mkdir -p ${DESTDIR}${MANPREFIX}/man1
 	@sed "s/VERSION/${VERSION}/g" < utmp.1 > ${DESTDIR}${MANPREFIX}/man1/utmp.1
