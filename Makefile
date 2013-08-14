@@ -3,37 +3,39 @@
 
 include config.mk
 
-SRC = utmp.c
-OBJ = ${SRC:.c=.o}
+DIST    = LICENSE Makefile config.mk utmp.1 utmp.c bsd.c posix.c
+VERSION = 0.2
 
-all: options utmp 
+all: options utmp
 
 options:
 	@echo utmp build options:
 	@echo "CFLAGS   = ${CFLAGS}"
+	@echo "CPPFLAGS = ${CPPFLAGS}"
 	@echo "LDFLAGS  = ${LDFLAGS}"
+	@echo "LDLIBS	= ${LDLIBS}"
 	@echo "CC       = ${CC}"
 
 .c.o:
 	@echo CC $<
-	@${CC} -c ${CFLAGS} $<
+	@${CC} $(CFLAGS) $(CPPFLAGS) -c $<
 
-${OBJ}: config.mk
-
-utmp: ${OBJ}
+utmp: $(OBJS)
 	@echo CC -o $@
-	@${CC} -o $@ ${OBJ} ${LDFLAGS}
+	@$(CC) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) $(OBJS) $(LDLIBS) -o $@
 
+distclean: clean
+	@echo cleaning for distribution
+	@rm config.mk
 clean:
 	@echo cleaning
-	@rm -f utmp ${OBJ} utmp-${VERSION}.tar.gz
+	@rm -f utmp utmp-${VERSION}.tar.gz *.o
 
 dist: clean
 	@echo creating dist tarball
 	@mkdir -p utmp-${VERSION}
-	@cp -R LICENSE Makefile config.mk utmp.1 ${SRC} utmp-${VERSION}
-	@tar -cf utmp-${VERSION}.tar utmp-${VERSION}
-	@gzip utmp-${VERSION}.tar
+	@cp -R $(DIST) utmp-${VERSION}
+	@tar -cf -  utmp-${VERSION} | gzip > utmp-${VERSION}.tar.gz
 	@rm -rf utmp-${VERSION}
 
 install: all
@@ -43,7 +45,7 @@ install: all
 	@chmod 755 ${DESTDIR}${PREFIX}/bin/utmp
 	@chgrp ${GROUP} ${DESTDIR}${PREFIX}/bin/utmp
 	@chmod g+s ${DESTDIR}${PREFIX}/bin/utmp
-	@echo installing manual page to ${DESTDIR}${PREFIX}/man1
+	@echo installing manual page to ${DESTDIR}${MANPREFIX}/man1
 	@mkdir -p ${DESTDIR}${MANPREFIX}/man1
 	@sed "s/VERSION/${VERSION}/g" < utmp.1 > ${DESTDIR}${MANPREFIX}/man1/utmp.1
 	@chmod 644 ${DESTDIR}${MANPREFIX}/man1/utmp.1
@@ -54,4 +56,4 @@ uninstall:
 	@echo removing manual page from ${DESTDIR}${PREFIX}/man1
 	@rm -f ${DESTDIR}${MANPREFIX}/man1/utmp.1
 
-.PHONY: all options clean dist install uninstall
+.PHONY: options clean dist install uninstall
