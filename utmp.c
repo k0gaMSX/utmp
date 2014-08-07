@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <signal.h>
 
 #include <sys/types.h>
 #include <unistd.h>
@@ -39,6 +40,7 @@ main(int argc, char *argv[])
 {
 	int status;
 	uid_t uid;
+	sigset_t set;
 	extern void addutmp(void), delutmp(void);
 
 	egid = getegid();
@@ -54,8 +56,12 @@ main(int argc, char *argv[])
 	setenv("SHELL", pass->pw_shell, 0);
 	setenv("HOME", pass->pw_dir, 0);
 
+	sigfillset(&set);
+	sigprocmask(SIG_BLOCK, &set, NULL);
+
 	switch (fork()) {
 	case 0:
+		sigprocmask(SIG_UNBLOCK, &set, NULL);
 		argv[0] = getenv("SHELL");
 		execv(argv[0], argv);
 		die("error executing shell:%s", strerror(errno));
@@ -63,10 +69,13 @@ main(int argc, char *argv[])
 		die("error spawning child:%s", strerror(errno));
 	default:
 		addutmp();
-		if (wait(&status) == -1) {
-			fprintf(stderr, "error waiting child:%s\n",
-				strerror(errno));
-		}
+		signal(SIGINT, SIG_IGN);
+		signal(SIGTERM, SIG_IGN);
+		signal(SIGHUP, SIG_IGN);
+		sigprocmask(SIG_UNBLOCK, &set, NULL);
+
+		if (wait(&status) == -1)
+			perror("error waiting child");
 		delutmp();
 	}
 	return 0;
