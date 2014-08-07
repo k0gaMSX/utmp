@@ -56,7 +56,8 @@ main(int argc, char *argv[])
 
 	switch (fork()) {
 	case 0:
-		execv(getenv("SHELL"), ++argv);
+		argv[0] = getenv("SHELL");
+		execv(argv[0], argv);
 		die("error executing shell:%s", strerror(errno));
 	case -1:
 		die("error spawning child:%s", strerror(errno));
