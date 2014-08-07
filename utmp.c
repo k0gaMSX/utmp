@@ -78,5 +78,5 @@ main(int argc, char *argv[])
 			perror("error waiting child");
 		delutmp();
 	}
-	return 0;
+	return (WIFEXITED(status)) ? WEXITSTATUS(status) : EXIT_FAILURE;
 }
