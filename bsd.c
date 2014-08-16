@@ -10,8 +10,6 @@
 #include <utmp.h>
 #include <pwd.h>
 
-#include "utmp.h"
-
 extern void die(const char *fmt, ...);
 extern struct passwd *pass;
 extern gid_t egid, gid;
