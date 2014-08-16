@@ -1,7 +1,6 @@
 
 
 #include <errno.h>
-#include <ctype.h>
 #include <stdarg.h>
 #include <stdlib.h>
 #include <stdio.h>
