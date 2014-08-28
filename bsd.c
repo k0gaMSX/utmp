@@ -11,7 +11,7 @@
 #include <pwd.h>
 
 extern void die(const char *fmt, ...);
-extern struct passwd *pass;
+extern struct passwd *pw;
 extern gid_t egid, gid;
 static struct utmp utmp;
 
@@ -25,8 +25,8 @@ addutmp(void)
 	if (!(host = getenv("DISPLAY")))
 		host = "-";
 
-	if (strlen(pass->pw_name) > sizeof(utmp.ut_name))
-		die("incorrect username %s", pass->pw_name);
+	if (strlen(pw->pw_name) > sizeof(utmp.ut_name))
+		die("incorrect username %s", pw->pw_name);
 
 	if ((pts = ttyname(STDIN_FILENO)) == NULL)
 		die("error getting pty name:%s", strerror(errno));
@@ -40,7 +40,7 @@ addutmp(void)
 
 	/* remove /dev/ from pts */
 	strncpy(utmp.ut_line, pts + 5, sizeof(utmp.ut_line));
-	strncpy(utmp.ut_name, pass->pw_name, sizeof(utmp.ut_name));
+	strncpy(utmp.ut_name, pw->pw_name, sizeof(utmp.ut_name));
 	strncpy(utmp.ut_host, host, sizeof(utmp.ut_host));
 	time(&utmp.ut_time);
 

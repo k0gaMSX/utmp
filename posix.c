@@ -29,7 +29,7 @@
 
 extern void die(const char *fmt, ...);
 static struct utmpx utmp;
-extern struct passwd *pass;
+extern struct passwd *pw;
 extern gid_t egid, gid;
 
 
@@ -70,8 +70,8 @@ addutmp(void)
 	unsigned ptyid;
 	char *pts, *cp, buf[5] = {'x'};
 
-	if (strlen(pass->pw_name) > sizeof(utmp.ut_user))
-		die("incorrect username %s", pass->pw_name);
+	if (strlen(pw->pw_name) > sizeof(utmp.ut_user))
+		die("incorrect username %s", pw->pw_name);
 
 	if ((pts = ttyname(STDIN_FILENO)) == NULL)
 		die("error getting pty name\n");
@@ -92,7 +92,7 @@ addutmp(void)
 		findutmp(USER_PROCESS);
 
 	utmp.ut_type = USER_PROCESS;
-	strncpy(utmp.ut_user, pass->pw_name, sizeof(utmp.ut_user));
+	strncpy(utmp.ut_user, pw->pw_name, sizeof(utmp.ut_user));
 	utmp.ut_pid = getpid();
 	utmp.ut_tv.tv_sec = time(NULL);
 	utmp.ut_tv.tv_usec = 0;

@@ -19,7 +19,7 @@
 #endif
 
 
-struct passwd *pass;
+struct passwd *pw;
 gid_t egid, gid;
 
 
@@ -46,14 +46,14 @@ main(int argc, char *argv[])
 	gid = getgid();
 	setgid(gid);
 
-	pass = getpwuid(uid = getuid());
-	if (!pass || !pass->pw_name)
+	pw = getpwuid(uid = getuid());
+	if (!pw || !pw->pw_name)
 		die("Process is running with an incorrect uid %d", uid);
 
-	setenv("LOGNAME", pass->pw_name, 1);
-	setenv("USER", pass->pw_name, 1);
-	setenv("SHELL", pass->pw_shell, 0);
-	setenv("HOME", pass->pw_dir, 0);
+	setenv("LOGNAME", pw->pw_name, 1);
+	setenv("USER", pw->pw_name, 1);
+	setenv("SHELL", pw->pw_shell, 1);
+	setenv("HOME", pw->pw_dir, 1);
 
 	sigfillset(&set);
 	sigprocmask(SIG_BLOCK, &set, NULL);
