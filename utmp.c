@@ -46,9 +46,13 @@ main(int argc, char *argv[])
 	gid = getgid();
 	setgid(gid);
 
-	pw = getpwuid(uid = getuid());
-	if (!pw || !pw->pw_name)
-		die("Process is running with an incorrect uid %d", uid);
+	errno = 0;
+	if ((pw = getpwuid(uid = getuid())) == NULL) {
+		if(errno)
+			die("getpwuid:%s", strerror(errno));
+		else
+			die("who are you?");
+	}
 
 	setenv("LOGNAME", pw->pw_name, 1);
 	setenv("USER", pw->pw_name, 1);
