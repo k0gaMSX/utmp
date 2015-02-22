@@ -10,7 +10,6 @@
 
 #include <sys/types.h>
 #include <unistd.h>
-#include <utmpx.h>
 #include <pwd.h>
 #include <grp.h>
 
