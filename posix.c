@@ -98,10 +98,10 @@ addutmp(void)
 	utmp.ut_tv.tv_usec = 0;
 	 /* don't use no standard fields host and session */
 
-	setgid(egid);
+	setegid(egid);
 	if(!pututxline(&utmp))
 		die("error adding utmp entry:%s", strerror(errno));
-	setgid(gid);
+	setegid(gid);
 	endutxent();
 }
 

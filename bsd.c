@@ -44,9 +44,9 @@ addutmp(void)
 	strncpy(utmp.ut_host, host, sizeof(utmp.ut_host));
 	time(&utmp.ut_time);
 
-	setgid(egid);
+	setegid(egid);
 	login(&utmp);
-	setgid(gid);
+	setegid(gid);
 }
 
 void

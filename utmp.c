@@ -14,11 +14,6 @@
 #include <sys/wait.h>
 
 
-#ifndef _POSIX_SAVED_IDS
-#error "This program needs saved id behaviour"
-#endif
-
-
 struct passwd *pw;
 gid_t egid, gid;
 
