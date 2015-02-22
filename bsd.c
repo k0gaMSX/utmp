@@ -26,17 +26,17 @@ addutmp(void)
 		host = "-";
 
 	if (strlen(pw->pw_name) > sizeof(utmp.ut_name))
-		die("incorrect username %s", pw->pw_name);
+		die("utmp:incorrect username %s", pw->pw_name);
 
 	if ((pts = ttyname(STDIN_FILENO)) == NULL)
-		die("error getting pty name:%s", strerror(errno));
+		die("utmp:error getting pty name:%s", strerror(errno));
 
 	for (cp = pts + strlen(pts) - 1; isdigit(*cp); --cp)
 		/* nothing */;
 
 	ptyid = atoi(++cp);
 	if (ptyid > 999 || strlen(pts + 5) > sizeof(utmp.ut_line))
-		die("Incorrect pts name %s\n", pts);
+		die("utmp:Incorrect pts name %s\n", pts);
 
 	/* remove /dev/ from pts */
 	strncpy(utmp.ut_line, pts + 5, sizeof(utmp.ut_line));

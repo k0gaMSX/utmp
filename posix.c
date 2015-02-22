@@ -70,17 +70,17 @@ addutmp(void)
 	char *pts, *cp, buf[5] = {'x'};
 
 	if (strlen(pw->pw_name) > sizeof(utmp.ut_user))
-		die("incorrect username %s", pw->pw_name);
+		die("utmp:incorrect username %s", pw->pw_name);
 
 	if ((pts = ttyname(STDIN_FILENO)) == NULL)
-		die("error getting pty name\n");
+		die("utmp:error getting pty name\n");
 
 	for (cp = pts + strlen(pts) - 1; isdigit(*cp); --cp)
 		/* nothing */;
 
 	ptyid = atoi(++cp);
 	if (ptyid > 999 || strlen(pts + 5) > sizeof(utmp.ut_line))
-		die("Incorrect pts name %s\n", pts);
+		die("utmp:Incorrect pts name %s\n", pts);
 	sprintf(buf + 1, "%03d", ptyid);
 	strncpy(utmp.ut_id, buf, 4);
 
@@ -99,7 +99,7 @@ addutmp(void)
 
 	setegid(egid);
 	if(!pututxline(&utmp))
-		die("error adding utmp entry:%s", strerror(errno));
+		die("utmp:error adding utmp entry:%s", strerror(errno));
 	setegid(gid);
 	endutxent();
 }
@@ -115,7 +115,7 @@ delutmp(void)
 		r->ut_tv.tv_usec = r->ut_tv.tv_sec = 0;
 		setgid(egid);
 		if (!pututxline(r))
-			die("error removing utmp entry:%s", strerror(errno));
+			die("utmp:error removing utmp entry:%s", strerror(errno));
 		setgid(gid);
 	}
 	endutxent();

@@ -46,9 +46,9 @@ main(int argc, char *argv[])
 	errno = 0;
 	if ((pw = getpwuid(uid = getuid())) == NULL) {
 		if(errno)
-			die("getpwuid:%s", strerror(errno));
+			die("utmp:getpwuid:%s", strerror(errno));
 		else
-			die("who are you?");
+			die("utmp:who are you?");
 	}
 
 	setenv("LOGNAME", pw->pw_name, 1);
@@ -83,7 +83,7 @@ main(int argc, char *argv[])
 		sigprocmask(SIG_UNBLOCK, &set, NULL);
 
 		if (wait(&status) == -1)
-			perror("error waiting child");
+			perror("utmp:error waiting child");
 		delutmp();
 	}
 	return (WIFEXITED(status)) ? WEXITSTATUS(status) : EXIT_FAILURE;
