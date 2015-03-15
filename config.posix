@@ -7,7 +7,7 @@ PREFIX = /usr/local
 MANPREFIX = ${PREFIX}/share/man
 
 # flags
-CPPFLAGS += -D_XOPEN_SOURCE=500 -DVERSION=\"${VERSION}\"
+CPPFLAGS += -D_XOPEN_SOURCE=600 -DVERSION=\"${VERSION}\"
 
 # Objects
 
